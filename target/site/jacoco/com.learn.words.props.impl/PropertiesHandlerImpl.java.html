@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PropertiesHandlerImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Wording</a> &gt; <a href="index.source.html" class="el_package">com.learn.words.props.impl</a> &gt; <span class="el_source">PropertiesHandlerImpl.java</span></div><h1>PropertiesHandlerImpl.java</h1><pre class="source lang-java linenums">package com.learn.words.props.impl;
+
+import com.learn.words.props.PropertiesHandler;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
+public class PropertiesHandlerImpl implements PropertiesHandler {
+
+    private static final String PATH = &quot;source_files.properties&quot;;
+
+<span class="nc" id="L15">    private static final Logger logger = Logger.getLogger(PropertiesHandlerImpl.class);</span>
+
+    private final Properties props;
+
+<span class="nc" id="L19">    public PropertiesHandlerImpl() {</span>
+<span class="nc" id="L20">        this.props = new Properties();</span>
+<span class="nc" id="L21">        try (InputStream in = getClass().getClassLoader().getResourceAsStream(PATH)) {</span>
+<span class="nc" id="L22">            this.props.load(in);</span>
+<span class="nc" id="L23">        } catch (IOException e) {</span>
+<span class="nc" id="L24">            logger.error(&quot;Error during load properties&quot;, e);</span>
+<span class="nc" id="L25">        }</span>
+<span class="nc" id="L26">        logger.info(String.format(&quot;%s created&quot;, this.getClass().getName()));</span>
+<span class="nc" id="L27">    }</span>
+
+    @Override
+    public String loadProp(String key) {
+<span class="nc bnc" id="L31" title="All 2 branches missed.">        if (StringUtils.isBlank(key)) {</span>
+<span class="nc" id="L32">            logger.warn(&quot;Can't load props by empty key&quot;);</span>
+<span class="nc" id="L33">            return StringUtils.EMPTY;</span>
+        }
+<span class="nc" id="L35">        return StringUtils.defaultString(this.props.getProperty(key).trim());</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

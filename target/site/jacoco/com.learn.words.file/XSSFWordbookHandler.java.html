@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>XSSFWordbookHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Wording</a> &gt; <a href="index.source.html" class="el_package">com.learn.words.file</a> &gt; <span class="el_source">XSSFWordbookHandler.java</span></div><h1>XSSFWordbookHandler.java</h1><pre class="source lang-java linenums">package com.learn.words.file;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+
+
+<span class="nc" id="L12">public class XSSFWordbookHandler implements FileHandler&lt;XSSFWorkbook&gt; {</span>
+
+<span class="nc" id="L14">    private static final Logger logger = Logger.getLogger(XSSFWordbookHandler.class);</span>
+
+    @Override
+    public XSSFWorkbook openFile(String path) {
+<span class="nc bnc" id="L18" title="All 2 branches missed.">        if (StringUtils.isBlank(path)) {</span>
+<span class="nc" id="L19">            String message = &quot;Path is empty or null. Path is required property.&quot;;</span>
+<span class="nc" id="L20">            logger.error(message);</span>
+<span class="nc" id="L21">            throw new IllegalArgumentException(message);</span>
+        }
+        try {
+<span class="nc" id="L24">            return new XSSFWorkbook(path);</span>
+<span class="nc" id="L25">        } catch (IOException | RuntimeException e) {</span>
+<span class="nc" id="L26">            logger.error(&quot;Can't open book&quot;, e);</span>
+<span class="nc" id="L27">            throw new IllegalStateException(e);</span>
+        }
+    }
+
+    @Override
+    public void saveAndClose(XSSFWorkbook file, String path) {
+<span class="nc bnc" id="L33" title="All 4 branches missed.">        if (file == null || StringUtils.isBlank(path)) {</span>
+<span class="nc" id="L34">            String message = &quot;File and path can't be empty&quot;;</span>
+<span class="nc" id="L35">            logger.error(message);</span>
+<span class="nc" id="L36">            throw new IllegalStateException(message);</span>
+        }
+<span class="nc" id="L38">        try (OutputStream out = new FileOutputStream(path)) {</span>
+<span class="nc" id="L39">            file.write(out);</span>
+<span class="nc" id="L40">        } catch (IOException e) {</span>
+<span class="nc" id="L41">            logger.error(&quot;Error during saving file&quot;, e);</span>
+<span class="nc" id="L42">            throw new IllegalStateException(e);</span>
+<span class="nc" id="L43">        }</span>
+<span class="nc" id="L44">    }</span>
+
+    @Override
+    public void saveAndClose(XSSFWorkbook file) {
+<span class="nc bnc" id="L48" title="All 2 branches missed.">        if (file == null) {</span>
+<span class="nc" id="L49">            String message = &quot;File can't be null&quot;;</span>
+<span class="nc" id="L50">            logger.error(message);</span>
+<span class="nc" id="L51">            throw new IllegalStateException(message);</span>
+        }
+        try {
+<span class="nc" id="L54">            file.write(file.getPackagePart().getOutputStream());</span>
+<span class="nc" id="L55">        } catch (IOException e) {</span>
+<span class="nc" id="L56">            logger.error(&quot;Error during saving file&quot;, e);</span>
+<span class="nc" id="L57">            throw new IllegalStateException(e);</span>
+<span class="nc" id="L58">        }</span>
+<span class="nc" id="L59">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>
