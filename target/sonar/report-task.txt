@@ -1,6 +1,0 @@
-projectKey=com.learn.words:Wording
-serverUrl=http://localhost:9000
-serverVersion=9.0.1.46107
-dashboardUrl=http://localhost:9000/dashboard?id=com.learn.words%3AWording
-ceTaskId=AXtL4Qa6Hxdjgxb68TAV
-ceTaskUrl=http://localhost:9000/api/ce/task?id=AXtL4Qa6Hxdjgxb68TAV
