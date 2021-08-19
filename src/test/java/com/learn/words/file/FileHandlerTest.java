@@ -1,15 +1,12 @@
 package com.learn.words.file;
 
-import org.apache.poi.openxml4j.exceptions.OpenXML4JException;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.xmlbeans.XmlException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
-import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -41,7 +38,7 @@ class FileHandlerTest {
     }
 
     @Test
-    void saveAndClose() throws OpenXML4JException, XmlException, IOException {
+    void saveAndClose() {
         XSSFWorkbook sheets = handler.openFile(path);
 
         long before = new File(path).lastModified();
