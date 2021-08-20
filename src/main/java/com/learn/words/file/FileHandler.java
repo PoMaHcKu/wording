@@ -6,5 +6,5 @@ public interface FileHandler<T> {
 
     void saveAndClose(String path);
 
-    void saveAndClose();
+    String saveAndClose();
 }

@@ -2,26 +2,29 @@ package com.learn.words.file;
 
 import com.learn.words.file.wrap.XssfFileWrapper;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class FileHandlerTest {
 
+    static String pathToSources;
     static String path;
     static String emptyPath;
     static String incorrectPath;
+
+    static List<File> trash = new ArrayList<>();
 
     FileHandler<XssfFileWrapper> handler;
 
     @BeforeAll
     static void initStaticResources() {
-        path = "/home/roman/Documents/words_list.xlsx";
+        pathToSources = "src/test/resources/";
+        path = pathToSources + "/words_list.xlsx";
         emptyPath = null;
         incorrectPath = "/home/no_exists_user/noFile";
     }
@@ -45,8 +48,10 @@ class FileHandlerTest {
 
         long before = new File(path).lastModified();
         workbook.setSheetName(0, "after_test_name");
-        handler.saveAndClose("/home/roman/Documents/n_f.xlsx");
-        long after = new File("/home/roman/Documents/n_f.xlsx").lastModified();
+        handler.saveAndClose(pathToSources + "n_f.xlsx");
+        File trashAfter = new File(pathToSources + "n_f.xlsx");
+        trash.add(trashAfter);
+        long after = trashAfter.lastModified();
 
         assertTrue(after > before);
         assertThrows(IllegalStateException.class, () -> handler.saveAndClose(path));
@@ -63,12 +68,20 @@ class FileHandlerTest {
         XSSFWorkbook workbook = file.getWorkbook();
         workbook.setSheetName(0, "after_test_name");
 
-        assertDoesNotThrow(() -> handler.saveAndClose());
+        assertDoesNotThrow(() -> {
+            File saved = new File(handler.saveAndClose());
+            trash.add(saved);
+        });
         assertThrows(IllegalStateException.class, () -> handler.saveAndClose());
     }
 
     @AfterEach
-    public void destroy() {
+    void destroy() {
         this.handler = null;
+    }
+
+    @AfterAll
+    static void destroyAll() {
+        trash.forEach(File::delete);
     }
 }

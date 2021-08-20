@@ -49,7 +49,7 @@ public class XSSFWordbookHandler implements FileHandler<XssfFileWrapper> {
     }
 
     @Override
-    public void saveAndClose() {
+    public String saveAndClose() {
         if (file == null) {
             String message = "File can't be null";
             logger.error(message);
@@ -59,6 +59,7 @@ public class XSSFWordbookHandler implements FileHandler<XssfFileWrapper> {
         try (OutputStream out = new FileOutputStream(timeStampPath)) {
             file.getWorkbook().write(out);
             this.file = null;
+            return timeStampPath;
         } catch (IOException e) {
             logger.error("Error during saving file", e);
             throw new IllegalStateException(e);
