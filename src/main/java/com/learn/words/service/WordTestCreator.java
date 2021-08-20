@@ -11,4 +11,6 @@ public interface WordTestCreator {
 
     List<Row> loadAllRowsFrom(XSSFWorkbook workbook, int startRow);
 
+    void removeValuesFromEachRowRandomCell(List<Row> rows);
+
 }
