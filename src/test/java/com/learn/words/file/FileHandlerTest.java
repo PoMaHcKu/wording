@@ -1,5 +1,6 @@
 package com.learn.words.file;
 
+import com.learn.words.file.wrap.XssfFileWrapper;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -16,7 +17,7 @@ class FileHandlerTest {
     static String emptyPath;
     static String incorrectPath;
 
-    FileHandler<XSSFWorkbook> handler;
+    FileHandler<XssfFileWrapper> handler;
 
     @BeforeAll
     static void initStaticResources() {
@@ -39,21 +40,31 @@ class FileHandlerTest {
 
     @Test
     void saveAndClose() {
-        XSSFWorkbook sheets = handler.openFile(path);
+        XssfFileWrapper file = handler.openFile(path);
+        XSSFWorkbook workbook = file.getWorkbook();
 
         long before = new File(path).lastModified();
-        sheets.setSheetName(0, "after_test_name");
-        handler.saveAndClose(sheets, "/home/roman/Documents/n_f.xlsx");
+        workbook.setSheetName(0, "after_test_name");
+        handler.saveAndClose("/home/roman/Documents/n_f.xlsx");
         long after = new File("/home/roman/Documents/n_f.xlsx").lastModified();
 
         assertTrue(after > before);
-        assertThrows(IllegalStateException.class, () -> handler.saveAndClose(null, path));
-        assertThrows(IllegalStateException.class, () -> handler.saveAndClose(sheets, emptyPath));
-        assertThrows(IllegalStateException.class, () -> handler.saveAndClose(sheets, incorrectPath));
+        assertThrows(IllegalStateException.class, () -> handler.saveAndClose(path));
+        handler.openFile(path);
+        assertThrows(IllegalStateException.class, () -> handler.saveAndClose(emptyPath));
+        handler.openFile(path);
+        assertThrows(IllegalStateException.class, () -> handler.saveAndClose(incorrectPath));
     }
 
     @Test
-    void testSaveAndClose() {
+    void testSaveWithoutPath() {
+        XssfFileWrapper file = handler.openFile(path);
+
+        XSSFWorkbook workbook = file.getWorkbook();
+        workbook.setSheetName(0, "after_test_name");
+
+        assertDoesNotThrow(() -> handler.saveAndClose());
+        assertThrows(IllegalStateException.class, () -> handler.saveAndClose());
     }
 
     @AfterEach
